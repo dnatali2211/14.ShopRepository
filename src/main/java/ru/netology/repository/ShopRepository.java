@@ -2,6 +2,8 @@ package ru.netology.repository;
 
 import ru.netology.shop.Product;
 
+import java.nio.file.FileAlreadyExistsException;
+
 public class ShopRepository {
     private Product[] products = new Product[0];
 
@@ -27,7 +29,11 @@ public class ShopRepository {
      *
      * @param product — добавляемый товар
      */
-    public void add(Product product) {
+    public void add(Product product, int id) {
+        Product prod = findById(id);
+        if (prod != null) {
+            throw new AlreadyExistsException("Element with id: " + id + " already exist");
+        }
         products = addToArray(products, product);
     }
 
@@ -48,7 +54,7 @@ public class ShopRepository {
     public void remove(int id) {
         Product prod = findById(id);
         if (prod == null) {
-           throw new NotFoundException ("Element with id: " + id + " not found");
+            throw new NotFoundException("Element with id: " + id + " not found");
         }
 
         Product[] tmp = new Product[products.length - 1];
